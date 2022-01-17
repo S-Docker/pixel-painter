@@ -1,6 +1,7 @@
 const gridContainer = document.querySelector("#grid-container");
-let gridPixels;
+let gridSize;
 let drawState = false;
+let gridShown = true;
 
 /*
  * Keeps track of whether left click is being held down, allows
@@ -21,16 +22,27 @@ function initialiseMouseClickDetection(){
 }
 
 function generateGrid(size){
+    gridSize = size;
     // Set grid containers maximum items per column equal to size parameter
     gridContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`; 
 
-    for(let i = 0; i < size * size; i++){
+    for(let i = 1; i <= size * size; i++){
         const pixel = document.createElement('div');
         pixel.classList.add('pixel');
         gridContainer.appendChild(pixel); 
         
         AddMouseoverAndMousedownEvent(pixel);
         disableDragDropFunctionality(pixel);
+
+        // stop double border being created on last pixel in the column
+        if (i % size !== 0){
+            pixel.style.borderRightStyle = "solid";
+        }
+
+        // stop double border being created on last row in the grid
+        if (i <= ((size * size) - size)){
+            pixel.style.borderBottomStyle = "solid";
+        }
     }  
 }
 
@@ -63,6 +75,7 @@ function colorPixel(pixel){
 
 function initialiseButtonOptions(){
     clearGrid();
+    toggleGridLines();
 }
 
 function clearGrid(){
@@ -71,9 +84,28 @@ function clearGrid(){
         let paintedPixels = document.querySelectorAll('.painted');
 
         paintedPixels.forEach(pixel => {
-            pixel.removeAttribute('style');
+            pixel.style.removeProperty('background-color');
             pixel.classList.remove('painted');
         });
+    });
+}
+
+function toggleGridLines(){
+    let toggleGridButton = document.querySelector('#toggle-grid-lines');
+    let gridContainer = document.querySelector('#grid-container');
+
+    toggleGridButton.addEventListener('click', () => {
+        let borderColor = gridShown ? 'transparent' : '#c9c9c9';
+        let pixels = document.querySelectorAll('.pixel');
+
+        pixels.forEach(pixel => {
+            pixel.style.borderColor = borderColor;
+        });
+
+        gridShown = !gridShown;
+
+        // makes pixels appear to touch edge of grid by matching border color to wrapper border color
+        gridContainer.style.borderColor = gridShown ? "#c9c9c9" : "#161f6d";
     });
 }
 

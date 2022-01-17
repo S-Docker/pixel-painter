@@ -40,18 +40,26 @@ body {
     gap: 10%;
 }
 
-#grid-container {
-    display: grid;
+.grid-wrapper {
     width: 30%;
     border-style: solid;
     border-width: 40px;
     border-radius: 4px;
     border-color: #161f6d;
+}
+
+#grid-container {
+    display: grid;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #c9c9c9;
     background-color: #FFFFFF;
 }
 
 .pixel {
     padding-bottom: 100%;
+    border-width: 1px;
+    border-color: #c9c9c9;
 }
 
 .footer {
