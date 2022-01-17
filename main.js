@@ -35,7 +35,11 @@ function generateGrid(size){
 }
 
 function AddMouseoverAndMousedownEvent(pixel){
-    pixel.addEventListener('mousedown', colorPixel);
+    pixel.addEventListener('mousedown', (e) => {
+        if (e.button === 0){
+            colorPixel(e);
+        }
+    });
 
     pixel.addEventListener('mouseover', (e) => {
         if (drawState){
