@@ -53,8 +53,26 @@ function disableDragDropFunctionality(pixel){
 }
 
 function colorPixel(pixel){
+    pixel.currentTarget.classList.add('painted');
     pixel.currentTarget.style.backgroundColor = "black";
+}
+
+function initialiseButtonOptions(){
+    clearGrid();
+}
+
+function clearGrid(){
+    let clear = document.querySelector("#clear");
+    clear.addEventListener('click', () => {
+        let paintedPixels = document.querySelectorAll('.painted');
+
+        paintedPixels.forEach(pixel => {
+            pixel.removeAttribute('style');
+            pixel.classList.remove('painted');
+        });
+    });
 }
 
 generateGrid(16);
 initialiseMouseClickDetection();
+initialiseButtonOptions();
