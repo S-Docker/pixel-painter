@@ -5,6 +5,7 @@ const Tools = Object.freeze({
 });
 
 const gridContainer = document.querySelector("#grid-container");
+const toolButtons = document.querySelectorAll(".tool-btn");
 let paintColor = '#000000';
 let backgroundColor = '#ffffff';
 let toolState = Tools.PAINT;
@@ -203,6 +204,7 @@ function SelectPaintTool(){
     let paintButton = document.querySelector('#paint-tool-selector'); 
 
     paintButton.addEventListener('click', () => {
+        updateToolButtons(paintButton);
         toolState = Tools.PAINT;
     });
 }
@@ -211,6 +213,7 @@ function SelectEraserTool(){
     let eraseButton = document.querySelector('#erase-tool-selector'); 
 
     eraseButton.addEventListener('click', () => {
+        updateToolButtons(eraseButton);
         toolState = Tools.ERASE;
     });
 }
@@ -219,6 +222,7 @@ function SelectFillTool(){
     let fillButton = document.querySelector('#fill-tool-selector'); 
 
     fillButton.addEventListener('click', () => {
+        updateToolButtons(fillButton);
         toolState = Tools.FILL;
     });
 }
@@ -237,7 +241,13 @@ function performToolAction(pixel){
     }
 }
 
-generateGrid(60);
+function updateToolButtons(activeButton){
+    toolButtons.forEach(button => {
+        button === activeButton ? button.classList.add('tool-btn-active') : button.classList.remove('tool-btn-active')
+    });
+}
+
+generateGrid(16);
 initialiseMouseClickDetection();
 initialiseButtonOptions();
 setBackgroundColor(backgroundColor);
