@@ -1,12 +1,13 @@
 const Tools = Object.freeze({
-    PAINT:  Symbol("paint"),
-    ERASE:  Symbol("erase")
+    PAINT: Symbol("paint"),
+    ERASE: Symbol("erase")
 });
 
 const gridContainer = document.querySelector("#grid-container");
 let paintColor = '#000000';
 let backgroundColor = '#ffffff';
-let drawState = false;
+let toolState = Tools.PAINT;
+let mouseDown = false;
 let gridShown = true;
 
 /*
@@ -16,13 +17,13 @@ let gridShown = true;
 function initialiseMouseClickDetection(){
     window.addEventListener('mousedown', (e) => {
         if (e.button === 0){
-            drawState = true;
+            mouseDown = true;
         }
     })
 
     window.addEventListener('mouseup', (e) => {
         if (e.button === 0){
-            drawState = false;
+            mouseDown = false;
         }
     });
 }
@@ -54,13 +55,13 @@ function generateGrid(size){
 function AddMouseoverAndMousedownEvent(pixel){
     pixel.addEventListener('mousedown', (e) => {
         if (e.button === 0){
-            colorPixel(e);
+            performToolAction(e);
         }
     });
 
     pixel.addEventListener('mouseover', (e) => {
-        if (drawState){
-            colorPixel(e);
+        if (mouseDown){
+            performToolAction(e);
         }
     });
 }
@@ -73,14 +74,21 @@ function disableDragDropFunctionality(pixel){
     });
 }
 
-function colorPixel(pixel){
+function paintPixel(pixel){
     pixel.currentTarget.classList.add('painted');
     pixel.currentTarget.style.backgroundColor = paintColor;
+}
+
+function erasePixel(pixel){
+    pixel.currentTarget.classList.remove('painted');
+    pixel.currentTarget.style.removeProperty('background-color');
 }
 
 function initialiseButtonOptions(){
     clearGrid();
     toggleGridLines();
+    SelectPaintTool();
+    SelectEraserTool();
 }
 
 function clearGrid(){
@@ -120,6 +128,32 @@ function setPaintColor(value){
 
 function setBackgroundColor(value){
     document.querySelector('#grid-container').style.backgroundColor = value;
+}
+
+function SelectPaintTool(){
+    let paintButton = document.querySelector('#paint-tool-selector'); 
+
+    paintButton.addEventListener('click', () => {
+        toolState = Tools.PAINT;
+    });
+}
+
+function SelectEraserTool(){
+    let paintButton = document.querySelector('#erase-tool-selector'); 
+
+    paintButton.addEventListener('click', () => {
+        toolState = Tools.ERASE;
+    });
+}
+
+function performToolAction(pixel){
+    switch(toolState) {
+        case Tools.PAINT:
+            paintPixel(pixel);
+            break;
+        case Tools.ERASE:
+            erasePixel(pixel);
+    }
 }
 
 generateGrid(16);
