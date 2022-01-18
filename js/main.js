@@ -1,5 +1,4 @@
 const gridContainer = document.querySelector("#grid-container");
-let gridSize;
 let drawState = false;
 let gridShown = true;
 
@@ -22,7 +21,6 @@ function initialiseMouseClickDetection(){
 }
 
 function generateGrid(size){
-    gridSize = size;
     // Set grid containers maximum items per column equal to size parameter
     gridContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`; 
 
