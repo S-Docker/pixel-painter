@@ -7,6 +7,12 @@
     <title>Pixel Painter</title>
     <link rel="stylesheet" href="style.css">
     <script src="js/main.js" defer></script>
+    <script src="js/jscolor.js"></script>
+    <script>
+        jscolor.presets.default = {
+            format:'hex'
+        };
+    </script>
 </head>
 <body>
     <div id="container">
@@ -16,6 +22,8 @@
 
         <div class="content">
             <div class="draw-options">
+                <button id="paint-color-picker" data-jscolor="{value:'#000000', onInput: 'setPaintColor(this.toHEXString())'}">Paint color</button>
+                <button id="background-color-picker" data-jscolor="{value:'#ffffff', onInput: 'setBackgroundColor(this.toHEXString())'}">Background color</button>
                 <button id="toggle-grid-lines">Toggle grid</button>
                 <button id="clear">Clear</button>
             </div>

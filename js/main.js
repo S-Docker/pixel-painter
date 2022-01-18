@@ -1,4 +1,6 @@
 const gridContainer = document.querySelector("#grid-container");
+let paintColor = '#000000';
+let backgroundColor = '#ffffff';
 let drawState = false;
 let gridShown = true;
 
@@ -68,7 +70,7 @@ function disableDragDropFunctionality(pixel){
 
 function colorPixel(pixel){
     pixel.currentTarget.classList.add('painted');
-    pixel.currentTarget.style.backgroundColor = "black";
+    pixel.currentTarget.style.backgroundColor = paintColor;
 }
 
 function initialiseButtonOptions(){
@@ -107,6 +109,15 @@ function toggleGridLines(){
     });
 }
 
+function setPaintColor(value){
+    paintColor = value;
+}
+
+function setBackgroundColor(value){
+    document.querySelector('#grid-container').style.backgroundColor = value;
+}
+
 generateGrid(16);
 initialiseMouseClickDetection();
 initialiseButtonOptions();
+setBackgroundColor(backgroundColor);
