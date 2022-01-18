@@ -1,6 +1,7 @@
 const Tools = Object.freeze({
     PAINT: Symbol("paint"),
-    ERASE: Symbol("erase")
+    ERASE: Symbol("erase"),
+    FILL:  Symbol("fill")
 });
 
 const gridContainer = document.querySelector("#grid-container");
@@ -9,6 +10,7 @@ let backgroundColor = '#ffffff';
 let toolState = Tools.PAINT;
 let mouseDown = false;
 let gridShown = true;
+let grid2dArray = [];
 
 /*
  * Keeps track of whether left click is being held down, allows
@@ -49,7 +51,18 @@ function generateGrid(size){
         if (i <= ((size * size) - size)){
             pixel.style.borderBottomStyle = "solid";
         }
-    }  
+    }
+
+    convertGridTo2dArray(size); 
+}
+
+function convertGridTo2dArray(size){
+    let pixels = document.querySelectorAll('.pixel');
+    let pixelArray = Array.from(pixels);
+
+    for (let i = 0; i < size * size; i+=size) {
+        grid2dArray.push(pixelArray.slice(i, i+size));
+    }
 }
 
 function AddMouseoverAndMousedownEvent(pixel){
@@ -79,9 +92,54 @@ function paintPixel(pixel){
     pixel.currentTarget.style.backgroundColor = paintColor;
 }
 
+function fillPixel(pixel){
+    pixel.classList.add('painted');
+    pixel.style.backgroundColor = paintColor;
+}
+
 function erasePixel(pixel){
     pixel.currentTarget.classList.remove('painted');
     pixel.currentTarget.style.removeProperty('background-color');
+}
+
+function fillArea(pixel){
+    let indexAsArray = findIndexIn2dArray(pixel);
+    let x = indexAsArray[0];
+    let y = indexAsArray[1];
+    
+    boundaryFill(x, y, pixel.currentTarget.style.backgroundColor, paintColor);
+
+}
+
+// loop through each column of 2d array and check rows for match
+function findIndexIn2dArray(pixel){
+    let indexFound = false;
+    let indexX;
+    let indexY;
+
+    for (let i = 0; i < grid2dArray.length; i++) {
+        let checkIndex = grid2dArray[i].indexOf(pixel.currentTarget);
+
+        if (checkIndex !== -1){
+            indexX = i;
+            indexY = checkIndex;
+            indexFound = true;
+        }
+    }
+    return [indexX, indexY];
+}
+
+function boundaryFill(x, y, startColor){
+    let pixel = grid2dArray[x][y];
+    let pixelColor = pixel.style.backgroundColor;
+
+    if (pixelColor === startColor){
+        fillPixel(pixel);
+        boundaryFill(x + 1, y, startColor);
+        boundaryFill(x, y + 1, startColor);
+        boundaryFill(x - 1, y, startColor);
+        boundaryFill(x, y - 1, startColor);
+    }
 }
 
 function initialiseButtonOptions(){
@@ -89,6 +147,7 @@ function initialiseButtonOptions(){
     toggleGridLines();
     SelectPaintTool();
     SelectEraserTool();
+    SelectFillTool();
 }
 
 function clearGrid(){
@@ -139,10 +198,18 @@ function SelectPaintTool(){
 }
 
 function SelectEraserTool(){
-    let paintButton = document.querySelector('#erase-tool-selector'); 
+    let eraseButton = document.querySelector('#erase-tool-selector'); 
 
-    paintButton.addEventListener('click', () => {
+    eraseButton.addEventListener('click', () => {
         toolState = Tools.ERASE;
+    });
+}
+
+function SelectFillTool(){
+    let fillButton = document.querySelector('#fill-tool-selector'); 
+
+    fillButton.addEventListener('click', () => {
+        toolState = Tools.FILL;
     });
 }
 
@@ -153,6 +220,10 @@ function performToolAction(pixel){
             break;
         case Tools.ERASE:
             erasePixel(pixel);
+            break;
+        case Tools.FILL:
+            fillArea(pixel);
+            break;
     }
 }
 
