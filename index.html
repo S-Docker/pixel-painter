@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Painter</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="js/main.js" defer></script>
+    <script src="js/jscolor.js"></script>
+    <script>
+        jscolor.presets.default = {
+            format:'hex'
+        };
+    </script>
+</head>
+<body>
+    <div id="container">
+        <div class="header">
+            <h1>PIXEL <span>PAINTER</span></h1>
+        </div>
+
+        <div class="content">
+            <div class="draw-options">
+                <div class='tool-selectors'>
+                    <button id="paint-tool-selector">Paint</button>
+                    <button id="erase-tool-selector">Erase</button>
+                </div>
+                <button id="paint-color-picker" data-jscolor="{value:'#000000', onInput: 'setPaintColor(this.toHEXString())'}">Paint color</button>
+                <button id="background-color-picker" data-jscolor="{value:'#ffffff', onInput: 'setBackgroundColor(this.toHEXString())'}">Background color</button>
+                <button id="toggle-grid-lines">Toggle grid</button>
+                <button id="clear">Clear</button>
+            </div>
+            <div class="grid-wrapper">
+                <div id="grid-container"></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2022 S-Docker. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
