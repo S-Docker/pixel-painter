@@ -22,6 +22,10 @@
 
         <div class="content">
             <div class="draw-options">
+                <div class='tool-selectors'>
+                    <button id="paint-tool-selector">Paint</button>
+                    <button id="erase-tool-selector">Erase</button>
+                </div>
                 <button id="paint-color-picker" data-jscolor="{value:'#000000', onInput: 'setPaintColor(this.toHEXString())'}">Paint color</button>
                 <button id="background-color-picker" data-jscolor="{value:'#ffffff', onInput: 'setBackgroundColor(this.toHEXString())'}">Background color</button>
                 <button id="toggle-grid-lines">Toggle grid</button>

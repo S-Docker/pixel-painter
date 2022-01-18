@@ -1,3 +1,8 @@
+const Tools = Object.freeze({
+    PAINT:  Symbol("paint"),
+    ERASE:  Symbol("erase")
+});
+
 const gridContainer = document.querySelector("#grid-container");
 let paintColor = '#000000';
 let backgroundColor = '#ffffff';

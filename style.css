@@ -40,6 +40,22 @@ body {
     gap: 10%;
 }
 
+.draw-options {
+    display: flex;
+    flex-direction: column;
+}
+
+.tool-selectors {
+    display: flex;
+}
+
+button {
+    background-color: #fff;
+    color: #161f6d;
+    font-size: 14px;
+    border-color: #00abe1;
+}
+
 .grid-wrapper {
     width: 30%;
     border-style: solid;
@@ -53,7 +69,6 @@ body {
     border-style: solid;
     border-width: 1px;
     border-color: #c9c9c9;
-    background-color: #FFFFFF;
 }
 
 .pixel {
