@@ -92,6 +92,11 @@ function paintPixel(pixel){
     pixel.currentTarget.style.backgroundColor = paintColor;
 }
 
+/*
+ * Uses the pixel div element compared to remaining functions as
+ * data is pulled directly from 2d array of div containers created
+ * at div initialisations
+ */
 function fillPixel(pixel){
     pixel.classList.add('painted');
     pixel.style.backgroundColor = paintColor;
@@ -130,6 +135,11 @@ function findIndexIn2dArray(pixel){
 }
 
 function boundaryFill(x, y, startColor){
+    //stay within grid bounds
+    if (x >= grid2dArray.length || y >= grid2dArray.length || x < 0 || y < 0){
+        return;
+    }
+    
     let pixel = grid2dArray[x][y];
     let pixelColor = pixel.style.backgroundColor;
 
@@ -227,7 +237,7 @@ function performToolAction(pixel){
     }
 }
 
-generateGrid(16);
+generateGrid(60);
 initialiseMouseClickDetection();
 initialiseButtonOptions();
 setBackgroundColor(backgroundColor);
