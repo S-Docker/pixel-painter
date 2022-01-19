@@ -178,6 +178,7 @@ function initialiseButtonOptions(){
     SelectEraserTool();
     SelectFillTool();
     SelectColorPickerTool();
+    gridSliderTool();
 }
 
 function clearGrid(){
@@ -214,7 +215,6 @@ function toggleGridLines(){
 function adjustGridSize(value){
     removeGrid();
     generateGrid(value);
-    console.log(value);
 }
 
 function removeGrid(){
@@ -267,6 +267,16 @@ function SelectColorPickerTool(){
     pickerButton.addEventListener('click', () => {
         updateToolButtons(pickerButton);
         updateToolState(Tools.PICKER);
+    });
+}
+
+function gridSliderTool(){
+    slider = document.getElementById('grid-size-slider');
+    slider.addEventListener('change', () => {
+        adjustGridSize(slider.value);
+
+        let gridSizeText = document.getElementById('grid-size-value');
+        gridSizeText.textContent = slider.value;
     });
 }
 
