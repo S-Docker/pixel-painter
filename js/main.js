@@ -1,7 +1,8 @@
 const Tools = Object.freeze({
-    PAINT: Symbol("paint"),
-    ERASE: Symbol("erase"),
-    FILL:  Symbol("fill")
+    PAINT:  Symbol("paint"),
+    ERASE:  Symbol("erase"),
+    FILL:   Symbol("fill"),
+    PICKER: Symbol("picker")
 });
 
 const gridContainer = document.querySelector("#grid-container");
@@ -9,6 +10,8 @@ const toolButtons = document.querySelectorAll(".tool-btn");
 let paintColor = '#000000';
 let backgroundColor = '#ffffff';
 let toolState = Tools.PAINT;
+let lastToolState;
+let lastToolButton = document.querySelector("#paint-tool-selector");// used to remember last button pressed prior to picker
 let mouseDown = false;
 let gridShown = true;
 let grid2dArray = [];
@@ -108,13 +111,27 @@ function erasePixel(pixel){
     pixel.currentTarget.style.removeProperty('background-color');
 }
 
+function selectColor(pixel){
+    paintColor = pixel.currentTarget.style.backgroundColor;
+
+    //if pixel is empty, default background color is handled within container and can't be selected
+    if (paintColor === ""){
+        paintColor = backgroundColor;
+    }
+    toolState = lastToolState;
+    updateToolButtons(lastToolButton);
+
+    // force jscolor.js to update color preview based on picker selection
+    document.querySelector('#paint-color-picker').setAttribute('data-current-color', paintColor);
+    document.querySelector('#paint-color-picker').style.backgroundImage = `linear-gradient(to right, ${paintColor} 0%, ${paintColor} 30px, rgba(0, 0, 0, 0) 31px, rgba(0, 0, 0, 0) 100%), url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAQCAYAAAB3AH1ZAAAAU0lEQVRIS2OcOXPmfwY84OzZs/ikGYyNjfHK49KfnJzMsH379uWMow4YDYHREBjwEEhLS8NbDpCbz2GFAy79Tk5ODEuXLl3OOOqA0RAYDYGBDgEA8g6qcfRT/m4AAAAASUVORK5CYII=")`;
+}
+
 function fillArea(pixel){
     let indexAsArray = findIndexIn2dArray(pixel);
     let x = indexAsArray[0];
     let y = indexAsArray[1];
     
     boundaryFill(x, y, pixel.currentTarget.style.backgroundColor, paintColor);
-
 }
 
 // loop through each column of 2d array and check rows for match
@@ -159,6 +176,7 @@ function initialiseButtonOptions(){
     SelectPaintTool();
     SelectEraserTool();
     SelectFillTool();
+    SelectColorPickerTool();
 }
 
 function clearGrid(){
@@ -198,6 +216,7 @@ function setPaintColor(value){
 
 function setBackgroundColor(value){
     document.querySelector('#grid-container').style.backgroundColor = value;
+    backgroundColor = value;
 }
 
 function SelectPaintTool(){
@@ -205,7 +224,7 @@ function SelectPaintTool(){
 
     paintButton.addEventListener('click', () => {
         updateToolButtons(paintButton);
-        toolState = Tools.PAINT;
+        updateToolState(Tools.PAINT);
     });
 }
 
@@ -214,7 +233,7 @@ function SelectEraserTool(){
 
     eraseButton.addEventListener('click', () => {
         updateToolButtons(eraseButton);
-        toolState = Tools.ERASE;
+        updateToolState(Tools.ERASE);
     });
 }
 
@@ -223,8 +242,26 @@ function SelectFillTool(){
 
     fillButton.addEventListener('click', () => {
         updateToolButtons(fillButton);
-        toolState = Tools.FILL;
+        updateToolState(Tools.FILL);
     });
+}
+
+function SelectColorPickerTool(){
+    let pickerButton = document.querySelector('#picker-tool-selector'); 
+
+    pickerButton.addEventListener('click', () => {
+        updateToolButtons(pickerButton);
+        updateToolState(Tools.PICKER);
+    });
+}
+
+function updateToolState(newState){
+    // lastState used to toggle back to prev after picker, no need to remember
+    // solves edge case: clicking color picker more than once
+    if (toolState !== Tools.PICKER){
+        lastToolState = toolState;
+    }
+    toolState = newState;
 }
 
 function performToolAction(pixel){
@@ -238,10 +275,17 @@ function performToolAction(pixel){
         case Tools.FILL:
             fillArea(pixel);
             break;
+        case Tools.PICKER:
+            selectColor(pixel);
+            break;
     }
 }
 
 function updateToolButtons(activeButton){
+    if (activeButton.id !== "picker-tool-selector"){
+        lastToolButton = activeButton;
+    }
+    
     toolButtons.forEach(button => {
         button === activeButton ? button.classList.add('tool-btn-active') : button.classList.remove('tool-btn-active')
     });
