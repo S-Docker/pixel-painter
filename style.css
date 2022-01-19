@@ -69,14 +69,15 @@ button {
 }
 
 .grid-wrapper {
-    width: 30%;
     border-style: solid;
-    border-width: 40px;
+    border-width: 2vw;
     border-radius: 4px;
     border-color: #161f6d;
 }
 
 #grid-container {
+    width: 30vw;
+    height: 30vw;
     display: grid;
     border-style: solid;
     border-width: 1px;

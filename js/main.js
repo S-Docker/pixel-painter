@@ -36,7 +36,8 @@ function initialiseMouseClickDetection(){
 
 function generateGrid(size){
     // Set grid containers maximum items per column equal to size parameter
-    gridContainer.style.gridTemplateColumns = `repeat(${size}, 1fr)`; 
+    gridContainer.style.gridTemplateColumns = `repeat(${size}, minmax(0, 1fr))`;
+    gridContainer.style.gridTemplateRows = `repeat(${size}, minmax(0, 1fr))`;
 
     for(let i = 1; i <= size * size; i++){
         const pixel = document.createElement('div');
@@ -207,6 +208,20 @@ function toggleGridLines(){
 
         // makes pixels appear to touch edge of grid by matching border color to wrapper border color
         gridContainer.style.borderColor = gridShown ? "#c9c9c9" : "#161f6d";
+    });
+}
+
+function adjustGridSize(value){
+    removeGrid();
+    generateGrid(value);
+    console.log(value);
+}
+
+function removeGrid(){
+    let pixels = document.querySelectorAll('.pixel');
+
+    pixels.forEach(pixel => {
+        pixel.remove();
     });
 }
 
