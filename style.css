@@ -57,6 +57,7 @@ body {
     background-color: #161f6d;
     color: #fff;
     font-weight: bold;
+    transition: font-weight 0.3s, background-color 0.3s, color 0.3s;
 }
 
 button {
@@ -64,6 +65,7 @@ button {
     color: #161f6d;
     font-size: 14px;
     border-color: #00abe1;
+    transition: font-weight 0.3s, background-color 0.3s, color 0.3s;
 }
 
 .grid-wrapper {

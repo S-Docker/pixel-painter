@@ -30,8 +30,8 @@
                 <div class='tool-selectors'>
                     <button id="picker-tool-selector" class="tool-btn">Color picker</button>
                 </div>
-                <button id="paint-color-picker" data-jscolor="{value:'#000000', onInput: 'setPaintColor(this.toHEXString())'}">Paint color</button>
-                <button id="background-color-picker" data-jscolor="{value:'#ffffff', onInput: 'setBackgroundColor(this.toHEXString())'}">Background color</button>
+                <button id="paint-color-picker" data-jscolor="{value:'#000000', onChange: 'setPaintColor(this.toHEXString())'}">Paint color</button>
+                <button id="background-color-picker" data-jscolor="{value:'#ffffff', onChange: 'setBackgroundColor(this.toHEXString())'}">Background color</button>
                 <button id="toggle-grid-lines">Toggle grid</button>
                 <button id="clear">Clear</button>
             </div>
