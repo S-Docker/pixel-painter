@@ -223,6 +223,8 @@ function removeGrid(){
     pixels.forEach(pixel => {
         pixel.remove();
     });
+
+    grid2dArray.length = 0;
 }
 
 function setPaintColor(value){
@@ -273,7 +275,7 @@ function SelectColorPickerTool(){
 function gridSliderTool(){
     slider = document.getElementById('grid-size-slider');
     slider.addEventListener('change', () => {
-        adjustGridSize(slider.value);
+        adjustGridSize(parseInt(slider.value));
 
         let gridSizeText = document.getElementById('grid-size-value');
         gridSizeText.textContent = slider.value;
