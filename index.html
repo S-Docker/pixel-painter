@@ -23,13 +23,21 @@
         <div class="content">
             <div class="draw-options">
                 <div class='tool-selectors'>
-                    <button id="paint-tool-selector">Paint</button>
-                    <button id="erase-tool-selector">Erase</button>
+                    <button id="paint-tool-selector" class="tool-btn tool-btn-active">Paint</button>
+                    <button id="lighten-tool-selector" class="tool-btn">Lighten</button>
+                    <button id="darken-tool-selector" class="tool-btn">Darken</button>
+                    <button id="fill-tool-selector" class="tool-btn">Fill</button>
+                    <button id="erase-tool-selector" class="tool-btn">Erase</button>
                 </div>
-                <button id="paint-color-picker" data-jscolor="{value:'#000000', onInput: 'setPaintColor(this.toHEXString())'}">Paint color</button>
-                <button id="background-color-picker" data-jscolor="{value:'#ffffff', onInput: 'setBackgroundColor(this.toHEXString())'}">Background color</button>
+                <div class='tool-selectors'>
+                    <button id="picker-tool-selector" class="tool-btn">Color picker</button>
+                </div>
+                <button id="paint-color-picker" data-jscolor="{value:'#000000', onChange: 'setPaintColor(this.toHEXString())'}">Paint color</button>
+                <button id="background-color-picker" data-jscolor="{value:'#ffffff', onChange: 'setBackgroundColor(this.toHEXString())'}">Background color</button>
                 <button id="toggle-grid-lines">Toggle grid</button>
                 <button id="clear">Clear</button>
+                <input id="grid-size-slider" class="slider" autocomplete="off" type="range" min="1" max="64" value="16">
+                <p>Grid size: <span id="grid-size-value">16</span></p>
             </div>
             <div class="grid-wrapper">
                 <div id="grid-container"></div>
