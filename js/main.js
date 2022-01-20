@@ -1,8 +1,10 @@
 const Tools = Object.freeze({
-    PAINT:  Symbol("paint"),
-    ERASE:  Symbol("erase"),
-    FILL:   Symbol("fill"),
-    PICKER: Symbol("picker")
+    PAINT:   Symbol("paint"),
+    LIGHTEN: Symbol("lighten"),
+    DARKEN:  Symbol("darken"),
+    ERASE:   Symbol("erase"),
+    FILL:    Symbol("fill"),
+    PICKER:  Symbol("picker")
 });
 
 const gridContainer = document.querySelector("#grid-container");
@@ -97,6 +99,61 @@ function paintPixel(pixel){
     pixel.currentTarget.style.backgroundColor = paintColor;
 }
 
+function lightenPixel(pixel){
+    let pixelColor = pixel.currentTarget.style.backgroundColor;
+
+    if (pixelColor != ""){
+        pixelColor = colorShade(RGBToHex(pixelColor), 10);
+        pixel.currentTarget.classList.add('painted');
+        pixel.currentTarget.style.backgroundColor = pixelColor;
+    }
+}
+
+function darkenPixel(pixel){
+    let pixelColor = pixel.currentTarget.style.backgroundColor;
+
+    if (pixelColor != ""){
+        pixelColor = colorShade(RGBToHex(pixelColor), -10);
+        pixel.currentTarget.classList.add('painted');
+        pixel.currentTarget.style.backgroundColor = pixelColor;
+    }
+}
+
+function RGBToHex(rgb) {
+    // Choose correct separator
+    let sep = rgb.indexOf(',') > -1 ? ',' : ' ';
+    // Turn "rgb(r,g,b)" into [r,g,b]
+    rgb = rgb.substr(4).split(')')[0].split(sep);
+  
+    let r = (+rgb[0]).toString(16),
+        g = (+rgb[1]).toString(16),
+        b = (+rgb[2]).toString(16);
+  
+    if (r.length == 1) r = '0' + r;
+    if (g.length == 1) g = '0' + g;
+    if (b.length == 1) b = '0' + b;
+    return '#' + r + g + b;
+  }
+
+  // function found here: https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
+function colorShade(col, amt){
+    col = col.replace(/^#/, '') // strip #
+    if (col.length === 3) col = col[0] + col[0] + col[1] + col[1] + col[2] + col[2]; // convert from 3 to 6 characters
+  
+    let [r, g, b] = col.match(/.{2}/g);
+    ([r, g, b] = [parseInt(r, 16) + amt, parseInt(g, 16) + amt, parseInt(b, 16) + amt])
+  
+    r = Math.max(Math.min(255, r), 0).toString(16)
+    g = Math.max(Math.min(255, g), 0).toString(16)
+    b = Math.max(Math.min(255, b), 0).toString(16)
+  
+    const rr = (r.length < 2 ? '0' : '') + r
+    const gg = (g.length < 2 ? '0' : '') + g
+    const bb = (b.length < 2 ? '0' : '') + b
+  
+    return `#${rr}${gg}${bb}`
+  }
+
 /*
  * Uses the pixel div element compared to remaining functions as
  * data is pulled directly from 2d array of div containers created
@@ -174,10 +231,12 @@ function boundaryFill(x, y, startColor){
 function initialiseButtonOptions(){
     clearGrid();
     toggleGridLines();
-    SelectPaintTool();
-    SelectEraserTool();
-    SelectFillTool();
-    SelectColorPickerTool();
+    selectPaintTool();
+    selectLightenTool();
+    selectdarkenTool();
+    selectEraserTool();
+    selectFillTool();
+    selectColorPickerTool();
     gridSliderTool();
 }
 
@@ -236,7 +295,7 @@ function setBackgroundColor(value){
     backgroundColor = value;
 }
 
-function SelectPaintTool(){
+function selectPaintTool(){
     let paintButton = document.querySelector('#paint-tool-selector'); 
 
     paintButton.addEventListener('click', () => {
@@ -245,7 +304,25 @@ function SelectPaintTool(){
     });
 }
 
-function SelectEraserTool(){
+function selectLightenTool(){
+    let lightenButton = document.querySelector('#lighten-tool-selector'); 
+
+    lightenButton.addEventListener('click', () => {
+        updateToolButtons(lightenButton);
+        updateToolState(Tools.LIGHTEN);
+    });
+}
+
+function selectdarkenTool(){
+    let darkenButton = document.querySelector('#darken-tool-selector'); 
+
+    darkenButton.addEventListener('click', () => {
+        updateToolButtons(darkenButton);
+        updateToolState(Tools.DARKEN);
+    });
+}
+
+function selectEraserTool(){
     let eraseButton = document.querySelector('#erase-tool-selector'); 
 
     eraseButton.addEventListener('click', () => {
@@ -254,7 +331,7 @@ function SelectEraserTool(){
     });
 }
 
-function SelectFillTool(){
+function selectFillTool(){
     let fillButton = document.querySelector('#fill-tool-selector'); 
 
     fillButton.addEventListener('click', () => {
@@ -263,7 +340,7 @@ function SelectFillTool(){
     });
 }
 
-function SelectColorPickerTool(){
+function selectColorPickerTool(){
     let pickerButton = document.querySelector('#picker-tool-selector'); 
 
     pickerButton.addEventListener('click', () => {
@@ -295,6 +372,12 @@ function performToolAction(pixel){
     switch(toolState) {
         case Tools.PAINT:
             paintPixel(pixel);
+            break;
+        case Tools.LIGHTEN:
+            lightenPixel(pixel);
+            break;
+        case Tools.DARKEN:
+            darkenPixel(pixel);
             break;
         case Tools.ERASE:
             erasePixel(pixel);
